@@ -10,7 +10,11 @@ import (
 )
 
 func ConnectDB() {
-	config.LoadEnv()
+	if err := config.LoadEnv(); err != nil {
+		log.Fatal("Error loading environment variables: " + err.Error())
+		return
+	}
+
 	dsn := os.Getenv("DB_DSN")
 
 	DB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
