@@ -9,6 +9,8 @@ import (
 	"gorm.io/gorm"
 )
 
+var DB *gorm.DB
+
 func ConnectDB() {
 	if err := config.LoadEnv(); err != nil {
 		log.Fatal("Error loading environment variables: " + err.Error())
