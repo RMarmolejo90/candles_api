@@ -10,26 +10,33 @@ func CreateAddress(address models.Address) (models.Address, error) {
 	return address, result.Error
 }
 
-func GetAddressByID(id string) (address models.Address, error error) {
-	result := database.DB.First(&id)
+func GetAddressByID(id string) (models.Address, error) {
+	var address models.Address
+
+	result := database.DB.First(&address, id)
 	return address, result.Error
 }
 
-func UpdateAddress(id string, input models.Address) (address models.Address, error error) {
-	if err := database.DB.First(&address, id); err != nil {
-		return address, err.Error
+func UpdateAddress(id string, input models.Address) (models.Address, error) {
+	var address models.Address
+
+	if err := database.DB.First(&address, id).Error; err != nil {
+		return address, err
 	}
 
-	result := database.DB.Model(&address).Updates(&input)
-	return input, result.Error
+	if err := database.DB.Model(&address).Updates(input).Error; err != nil {
+		return address, err
+	}
+
+	return address, nil
 
 }
 
 func DeleteAddress(id string) error {
 	var address models.Address
-	if err := database.DB.First(&address, id); err != nil {
-		return err.Error
+	if err := database.DB.First(&address, id).Error; err != nil {
+		return err
 	}
-	result := database.DB.Delete(&address)
-	return result.Error
+	return database.DB.Delete(&address).Error
+
 }
