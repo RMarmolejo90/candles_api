@@ -5,7 +5,7 @@ import (
 	"github.com/rmarmolejo90/candles_api/internal/models"
 )
 
-func CreateAddress() (address models.Address, error error) {
+func CreateAddress(address models.Address) (models.Address, error) {
 	result := database.DB.Create(&address)
 	return address, result.Error
 }
