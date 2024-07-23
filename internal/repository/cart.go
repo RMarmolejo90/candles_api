@@ -5,15 +5,18 @@ import (
 	"github.com/rmarmolejo90/candles_api/internal/models"
 )
 
-func CreateCart(input models.Cart) (cart models.Cart, error error) {
-	result := database.DB.Create(&input)
-	return cart, result.Error
+func CreateCart(input models.Cart) (models.Cart, error) {
+	var cart models.Cart
+	err := database.DB.Create(&input).Error
+	return cart, err
 }
 
-func UpdateCart(id string, input models.Cart) (cart models.Cart, error error) {
-	if err := database.DB.First(&cart, id); err != nil {
-		return cart, err.Error
+func UpdateCart(id string, input models.Cart) (models.Cart, error) {
+	var cart models.Cart
+
+	if err := database.DB.First(&cart, id).Error; err != nil {
+		return cart, err
 	}
-	result := database.DB.Model(&cart).Updates(&input)
-	return cart, result.Error
+	err := database.DB.Model(&cart).Updates(&input).Error
+	return cart, err
 }
