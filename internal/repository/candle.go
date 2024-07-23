@@ -6,33 +6,37 @@ import (
 )
 
 func CreateCandle(candle models.Candle) (models.Candle, error) {
-	result := database.DB.Create(&candle)
-	return candle, result.Error
+	err := database.DB.Create(&candle).Error
+	return candle, err
 }
 
-func GetCandleById(id string) (candle models.Candle, error error) {
-	result := database.DB.First(&id)
-	return candle, result.Error
+func GetCandleById(id string) (models.Candle, error) {
+	var candle models.Candle
+	err := database.DB.First(&candle, id).Error
+	return candle, err
 }
 
-func GetCandles() (candles []models.Candle, error error) {
-	result := database.DB.Find(&candles)
-	return candles, result.Error
+func GetCandles() ([]models.Candle, error) {
+	var candles []models.Candle
+	err := database.DB.Find(&candles).Error
+	return candles, err
 }
 
-func UpdateCandle(id string, input models.Candle) (candle models.Candle, error error) {
-	if err := database.DB.First(&candle, id); err != nil {
-		return candle, err.Error
+func UpdateCandle(id string, input models.Candle) (models.Candle, error) {
+	var candle models.Candle
+	if err := database.DB.First(&candle, id).Error; err != nil {
+		return candle, err
 	}
-	result := database.DB.Model(&candle).Updates(&input)
-	return candle, result.Error
+	err := database.DB.Model(&candle).Updates(&input).Error
+	return candle, err
 }
 
 func DeleteCandle(id string) error {
 	var candle models.Candle
-	if err := database.DB.First(&candle); err != nil {
-		return err.Error
+	if err := database.DB.First(&candle, id).Error; err != nil {
+		return err
 	}
-	result := database.DB.Delete(&candle)
-	return result.Error
+
+	return database.DB.Delete(&candle).Error
+
 }
