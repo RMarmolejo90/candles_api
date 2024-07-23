@@ -20,7 +20,7 @@ func UpdateAddress(id string, input models.Address) (address models.Address, err
 		return address, err.Error
 	}
 
-	result := database.DB.Model(&address).Updates(input)
+	result := database.DB.Model(&address).Updates(&input)
 	return input, result.Error
 
 }
@@ -30,6 +30,6 @@ func DeleteAddress(id string) error {
 	if err := database.DB.First(&address, id); err != nil {
 		return err.Error
 	}
-	result := database.DB.Delete(address)
+	result := database.DB.Delete(&address)
 	return result.Error
 }
