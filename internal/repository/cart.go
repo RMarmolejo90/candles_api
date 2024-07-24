@@ -6,9 +6,8 @@ import (
 )
 
 func CreateCart(input models.Cart) (models.Cart, error) {
-	var cart models.Cart
 	err := database.DB.Create(&input).Error
-	return cart, err
+	return input, err
 }
 
 func UpdateCart(id string, input models.Cart) (models.Cart, error) {
@@ -19,4 +18,22 @@ func UpdateCart(id string, input models.Cart) (models.Cart, error) {
 	}
 	err := database.DB.Model(&cart).Updates(&input).Error
 	return cart, err
+}
+
+func GetCart(id string) (models.Cart, error) {
+	var cart models.Cart
+
+	err := database.DB.First(&cart, id).Error
+	return cart, err
+}
+
+func DeleteCart(id string) error {
+	var cart models.Cart
+	if err := database.DB.First(&cart, id).Error; err != nil {
+		return err
+	}
+
+	err := database.DB.Delete(cart, id).Error
+	return err
+
 }
