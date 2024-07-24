@@ -5,6 +5,29 @@ import (
 	"github.com/rmarmolejo90/candles_api/internal/models"
 )
 
+// Interfaces
+type CandleRepository interface {
+	CreateCandle(candle models.Candle) (models.Candle, error)
+	GetCandleByID(id uint) (models.Candle, error)
+	GetCandles() ([]models.Candle, error)
+	UpdateCandle(candle models.Candle) (models.Candle, error)
+	DeleteCandle(id uint) error
+}
+
+type ImageRepository interface {
+	CreateImage(image models.Image) (models.Image, error)
+	DeleteImage(id uint) error
+}
+
+type StockQuantityRepository interface {
+	CreateStock(stock models.StockQuantity) (models.StockQuantity, error)
+	GetStockByID(id uint) (models.StockQuantity, error)
+	UpdateStock(stock models.StockQuantity) (models.StockQuantity, error)
+	DeleteStock(id uint) error
+}
+
+// Repository Operations
+
 // Candles
 
 func CreateCandle(candle models.Candle) (models.Candle, error) {
