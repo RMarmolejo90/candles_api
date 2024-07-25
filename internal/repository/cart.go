@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"github.com/rmarmolejo90/candles_api/internal/database"
 	"github.com/rmarmolejo90/candles_api/internal/models"
+	"gorm.io/gorm"
 )
 
 // CartRepository defines the methods for interacting with the Cart data
@@ -15,11 +15,11 @@ type CartRepository interface {
 
 // cartRepository is the concrete implementation of CartRepository
 type cartRepository struct {
-	db *database.DB
+	db *gorm.DB
 }
 
 // NewCartRepository creates a new CartRepository
-func NewCartRepository(db *database.DB) CartRepository {
+func NewCartRepository(db *gorm.DB) CartRepository {
 	return &cartRepository{db: db}
 }
 
