@@ -28,6 +28,6 @@ func GetCategory(id string) (models.Category, error) {
 
 func GetAllCategories() ([]models.Category, error) {
 	var categories []models.Category
-	err := database.DB.Find(&category).Error
-	return []categories, err
+	err := database.DB.Find(&categories).Error
+	return categories, err
 }
