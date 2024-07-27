@@ -40,4 +40,16 @@ func (r *notificationRepository) GetNotificationsByUserID(userID uint) ([]models
 	return notifications, err
 }
 
-func
+func (r *notificationRepository) MarkAsRead(notificationID uint) error {
+	return r.db.Model(&models.Notification{}).Where("id = ?", notificationID).Update("read", true).Error
+}
+
+func (r *notificationRepository) DeleteNotification(id uint) error {
+	return r.db.Delete(&models.Notification{}, id).Error
+}
+
+func (r *notificationRepository) GetUnreadNotifications(userID uint) ([]models.Notification, error) {
+	var notifications []models.Notification
+	err := r.db.Where("user_id = ? AND read = ?", userID, false).Find(&notifications).Error
+	return notifications, err
+}
