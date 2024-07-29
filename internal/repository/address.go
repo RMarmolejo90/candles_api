@@ -9,6 +9,7 @@ import (
 type AddressRepository interface {
 	CreateAddress(address models.Address) (models.Address, error)
 	GetAddressByID(id uint) (models.Address, error)
+	GetAddressesByUserID(userID uint) ([]models.Address, error)
 	UpdateAddress(id uint, input models.Address) (models.Address, error)
 	DeleteAddress(id uint) error
 }
@@ -31,6 +32,12 @@ func (r *addressRepository) GetAddressByID(id uint) (models.Address, error) {
 	var address models.Address
 	err := r.db.First(&address, id).Error
 	return address, err
+}
+
+func (r *addressRepository) GetAddressesByUserID(userID uint) ([]models.Address, error) {
+	var addresses []models.Address
+	err := r.db.Where("user_id = ?", userID).Find(&addresses).Error
+	return addresses, err
 }
 
 func (r *addressRepository) UpdateAddress(id uint, input models.Address) (models.Address, error) {
