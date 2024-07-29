@@ -3,6 +3,7 @@ package repository
 import (
 	"github.com/rmarmolejo90/candles_api/internal/database"
 	"github.com/rmarmolejo90/candles_api/internal/models"
+	"gorm.io/gorm"
 )
 
 // Interfaces
@@ -26,69 +27,90 @@ type StockQuantityRepository interface {
 	DeleteStock(id uint) error
 }
 
-// Repository Operations
+// Structs for each repository
+type candleRepository struct {
+	db *gorm.DB
+}
 
-// Candles
+type imageRepository struct {
+	db *gorm.DB
+}
 
-func CreateCandle(candle models.Candle) (models.Candle, error) {
-	err := database.DB.Create(&candle).Error
+type stockQuantityRepository struct {
+	db *gorm.DB
+}
+
+// New repository constructors
+func NewCandleRepository() CandleRepository {
+	return &candleRepository{db: database.DB}
+}
+
+func NewImageRepository() ImageRepository {
+	return &imageRepository{db: database.DB}
+}
+
+func NewStockQuantityRepository() StockQuantityRepository {
+	return &stockQuantityRepository{db: database.DB}
+}
+
+// Implementations for CandleRepository
+func (r *candleRepository) CreateCandle(candle models.Candle) (models.Candle, error) {
+	err := r.db.Create(&candle).Error
 	return candle, err
 }
 
-func GetCandleByID(id uint) (models.Candle, error) { // Change to uint for ID type consistency
+func (r *candleRepository) GetCandleByID(id uint) (models.Candle, error) {
 	var candle models.Candle
-	err := database.DB.First(&candle, id).Error
+	err := r.db.First(&candle, id).Error
 	return candle, err
 }
 
-func GetCandles() ([]models.Candle, error) {
+func (r *candleRepository) GetCandles() ([]models.Candle, error) {
 	var candles []models.Candle
-	err := database.DB.Find(&candles).Error
+	err := r.db.Find(&candles).Error
 	return candles, err
 }
 
-func UpdateCandle(candle models.Candle) (models.Candle, error) {
-	err := database.DB.Save(&candle).Error
+func (r *candleRepository) UpdateCandle(candle models.Candle) (models.Candle, error) {
+	err := r.db.Save(&candle).Error
 	return candle, err
 }
 
-func DeleteCandle(id uint) error {
-	return database.DB.Delete(&models.Candle{}, id).Error
+func (r *candleRepository) DeleteCandle(id uint) error {
+	return r.db.Delete(&models.Candle{}, id).Error
 }
 
-// Images
-
-func CreateImage(image models.Image) (models.Image, error) {
-	err := database.DB.Create(&image).Error
+// Implementations for ImageRepository
+func (r *imageRepository) CreateImage(image models.Image) (models.Image, error) {
+	err := r.db.Create(&image).Error
 	return image, err
 }
 
-func DeleteImage(id uint) error {
+func (r *imageRepository) DeleteImage(id uint) error {
 	var image models.Image
-	if err := database.DB.First(&image, id).Error; err != nil {
+	if err := r.db.First(&image, id).Error; err != nil {
 		return err
 	}
-	return database.DB.Delete(&image, id).Error
+	return r.db.Delete(&image, id).Error
 }
 
-// Stock Quantity
-
-func CreateStock(stock models.StockQuantity) (models.StockQuantity, error) {
-	err := database.DB.Create(&stock).Error
+// Implementations for StockQuantityRepository
+func (r *stockQuantityRepository) CreateStock(stock models.StockQuantity) (models.StockQuantity, error) {
+	err := r.db.Create(&stock).Error
 	return stock, err
 }
 
-func GetStockByID(id uint) (models.StockQuantity, error) {
+func (r *stockQuantityRepository) GetStockByID(id uint) (models.StockQuantity, error) {
 	var stock models.StockQuantity
-	err := database.DB.First(&stock, id).Error
+	err := r.db.First(&stock, id).Error
 	return stock, err
 }
 
-func UpdateStock(stock models.StockQuantity) (models.StockQuantity, error) {
-	err := database.DB.Save(&stock).Error
+func (r *stockQuantityRepository) UpdateStock(stock models.StockQuantity) (models.StockQuantity, error) {
+	err := r.db.Save(&stock).Error
 	return stock, err
 }
 
-func DeleteStock(id uint) error {
-	return database.DB.Delete(&models.StockQuantity{}, id).Error
+func (r *stockQuantityRepository) DeleteStock(id uint) error {
+	return r.db.Delete(&models.StockQuantity{}, id).Error
 }
