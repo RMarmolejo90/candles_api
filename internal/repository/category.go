@@ -3,31 +3,42 @@ package repository
 import (
 	"github.com/rmarmolejo90/candles_api/internal/database"
 	"github.com/rmarmolejo90/candles_api/internal/models"
+	"gorm.io/gorm"
 )
 
-func CreateCategory(category models.Category) (models.Category, error) {
-	err := database.DB.Create(&category).Error
+type CategoryRepository interface {
+	CreateCategory(category models.Category) (models.Category, error)
+	GetCategory(id uint) (models.Category, error)
+	UpdateCategory(category models.Category) (models.Category, error)
+	GetAllCategories() ([]models.Category, error)
+}
+
+type categoryRepository struct {
+	db *gorm.DB
+}
+
+func NewCategoryRepository() CategoryRepository {
+	return &categoryRepository{db: database.DB}
+}
+
+func (r *categoryRepository) CreateCategory(category models.Category) (models.Category, error) {
+	err := r.db.Create(&category).Error
 	return category, err
 }
 
-func UpdateCategory(id string, input models.Category) (models.Category, error) {
+func (r *categoryRepository) GetCategory(id uint) (models.Category, error) {
 	var category models.Category
-	if err := database.DB.First(&category, id).Error; err != nil {
-		return category, err
-	}
-
-	err := database.DB.Model(&category).Updates(input).Error
+	err := r.db.First(&category, id).Error
 	return category, err
 }
 
-func GetCategory(id string) (models.Category, error) {
-	var category models.Category
-	err := database.DB.First(&category, id).Error
+func (r *categoryRepository) UpdateCategory(category models.Category) (models.Category, error) {
+	err := r.db.Save(&category).Error
 	return category, err
 }
 
-func GetAllCategories() ([]models.Category, error) {
+func (r *categoryRepository) GetAllCategories() ([]models.Category, error) {
 	var categories []models.Category
-	err := database.DB.Find(&categories).Error
+	err := r.db.Find(&categories).Error
 	return categories, err
 }
