@@ -5,3 +5,6 @@ import (
 	"github.com/rmarmolejo90/candles_api/internal/models"
 )
 
+type AddressService interface {
+	Crea
+}

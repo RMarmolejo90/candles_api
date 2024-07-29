@@ -3,40 +3,46 @@ package repository
 import (
 	"github.com/rmarmolejo90/candles_api/internal/database"
 	"github.com/rmarmolejo90/candles_api/internal/models"
+	"gorm.io/gorm"
 )
 
-func CreateAddress(address models.Address) (models.Address, error) {
-	result := database.DB.Create(&address)
-	return address, result.Error
+type AddressRepository interface {
+	CreateAddress(address models.Address) (models.Address, error)
+	GetAddressByID(id uint) (models.Address, error)
+	UpdateAddress(id uint, input models.Address) (models.Address, error)
+	DeleteAddress(id uint) error
 }
 
-func GetAddressByID(id string) (models.Address, error) {
-	var address models.Address
-
-	result := database.DB.First(&address, id)
-	return address, result.Error
+type addressRepository struct {
+	db *gorm.DB
 }
 
-func UpdateAddress(id string, input models.Address) (models.Address, error) {
-	var address models.Address
+func NewAddressRepository() AddressRepository {
+	return &addressRepository{db: database.DB}
+}
 
-	if err := database.DB.First(&address, id).Error; err != nil {
+// Ensure the method receiver is *addressRepository, not the package-level database.DB
+func (r *addressRepository) CreateAddress(address models.Address) (models.Address, error) {
+	err := r.db.Create(&address).Error
+	return address, err
+}
+
+func (r *addressRepository) GetAddressByID(id uint) (models.Address, error) {
+	var address models.Address
+	err := r.db.First(&address, id).Error
+	return address, err
+}
+
+func (r *addressRepository) UpdateAddress(id uint, input models.Address) (models.Address, error) {
+	var address models.Address
+	if err := r.db.First(&address, id).Error; err != nil {
 		return address, err
 	}
 
-	if err := database.DB.Model(&address).Updates(input).Error; err != nil {
-		return address, err
-	}
-
-	return address, nil
-
+	err := r.db.Model(&address).Updates(input).Error
+	return address, err
 }
 
-func DeleteAddress(id string) error {
-	var address models.Address
-	if err := database.DB.First(&address, id).Error; err != nil {
-		return err
-	}
-	return database.DB.Delete(&address).Error
-
+func (r *addressRepository) DeleteAddress(id uint) error {
+	return r.db.Delete(&models.Address{}, id).Error
 }
