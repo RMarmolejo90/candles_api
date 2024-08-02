@@ -12,6 +12,7 @@ type CategoryService interface {
 	GetCategory(id uint) (models.Category, error)
 	UpdateCategory(category models.Category) (models.Category, error)
 	GetAllCategories() ([]models.Category, error)
+	DeleteCategory(id uint) error
 }
 
 type categoryService struct {
@@ -43,4 +44,8 @@ func (s *categoryService) UpdateCategory(category models.Category) (models.Categ
 
 func (s *categoryService) GetAllCategories() ([]models.Category, error) {
 	return s.categoryRepo.GetAllCategories()
+}
+
+func (s *categoryService) DeleteCategory(id uint) error {
+	return s.categoryRepo.DeleteCategory(id)
 }
