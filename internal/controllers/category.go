@@ -31,14 +31,14 @@ func (cc *CategoryController) CreateCategory(c *gin.Context) {
 	c.JSON(http.StatusCreated, createdCategory)
 }
 
-func (cc *CategoryController) GetCategoryByID(c *gin.Context) {
+func (cc *CategoryController) GetCategory(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 32)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid category ID"})
 		return
 	}
-	category, err := cc.categoryService.GetCategoryByID(uint(id))
+	category, err := cc.categoryService.GetCategory(uint(id))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

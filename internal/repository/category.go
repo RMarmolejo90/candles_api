@@ -11,6 +11,7 @@ type CategoryRepository interface {
 	GetCategory(id uint) (models.Category, error)
 	UpdateCategory(category models.Category) (models.Category, error)
 	GetAllCategories() ([]models.Category, error)
+	DeleteCategory(id uint) error
 }
 
 type categoryRepository struct {
@@ -41,4 +42,8 @@ func (r *categoryRepository) GetAllCategories() ([]models.Category, error) {
 	var categories []models.Category
 	err := r.db.Find(&categories).Error
 	return categories, err
+}
+
+func (r *categoryRepository) DeleteCategory(id uint) error {
+	return r.db.Delete(&models.Category{}, id).Error
 }
