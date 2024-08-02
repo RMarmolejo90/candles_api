@@ -25,7 +25,6 @@ func NewReviewService(reviewRepo repository.ReviewRepository) ReviewService {
 }
 
 func (s *reviewService) CreateReview(review models.Review) (models.Review, error) {
-	// Business logic or validation can be added here before saving
 	if review.UserID == 0 || review.CandleID == 0 || review.Rating == 0 {
 		return models.Review{}, errors.New("all review fields must be provided")
 	}
