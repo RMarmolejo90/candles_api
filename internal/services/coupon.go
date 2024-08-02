@@ -17,6 +17,10 @@ type CouponService interface {
 	GetValidCoupons() ([]models.Coupon, error)
 }
 
+// Coupons will need encryption and validation added before implementing
+// this is just here to expand on in the future
+// there are no current plans to use coupons
+
 type couponService struct {
 	couponRepo repository.CouponRepository
 }
@@ -26,7 +30,7 @@ func NewCouponService(couponRepo repository.CouponRepository) CouponService {
 }
 
 func (s *couponService) CreateCoupon(coupon models.Coupon) (models.Coupon, error) {
-	// Business logic or validation can be added here before saving
+	// validation can be added here before saving
 	if coupon.Code == "" || coupon.Discount <= 0 || coupon.ValidUntil.Before(time.Now()) {
 		return models.Coupon{}, errors.New("invalid coupon details")
 	}
@@ -42,7 +46,7 @@ func (s *couponService) GetCouponByCode(code string) (models.Coupon, error) {
 }
 
 func (s *couponService) UpdateCoupon(coupon models.Coupon) (models.Coupon, error) {
-	// Additional business logic can be added here
+
 	if coupon.Code == "" || coupon.Discount <= 0 || coupon.ValidUntil.Before(time.Now()) {
 		return models.Coupon{}, errors.New("invalid coupon details")
 	}
